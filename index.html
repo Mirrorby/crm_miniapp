@@ -198,6 +198,43 @@
       `;
       container.appendChild(product);
     }
-  </script>
+  <script>
+  function submitOrder() {
+    const client = {
+      name: document.getElementById("clientName").value,
+      phone: document.getElementById("clientPhone").value,
+      address: document.getElementById("clientAddress").value,
+      channel: document.getElementById("channel").value,
+      logistics: document.getElementById("deliveryService").value,
+      comment: document.getElementById("orderComment").value
+    };
+
+    const products = Array.from(document.querySelectorAll('.product')).map(block => ({
+      category: block.querySelector('.category')?.value || '',
+      sku: block.querySelector('.sku')?.value || '',
+      qty: block.querySelector('.qty')?.value || '',
+      buyPrice: block.querySelector('.buyPrice')?.value || '',
+      sellPrice: block.querySelector('.sellPrice')?.value || '',
+      supplier: block.querySelector('.supplier')?.value || '',
+      comment: block.querySelector('.comment')?.value || ''
+    }));
+
+    const payload = {
+      client,
+      items: products
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbx0aWsZENWh3CEQ59ZZaJLtv4kMo1fCgMhKfq_8rmiAtRTPZREn8unlZeStmZvCCnDtzg/exec", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => res.text())
+    .then(msg => alert("✅ Заказ отправлен: " + msg))
+    .catch(err => alert("❌ Ошибка: " + err));
+  }
+</script>
 </body>
 </html>
